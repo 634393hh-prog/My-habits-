@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="My Habits">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>My Habits – عاداتي</title>
+<style>
+:root{--bg:#0b1220;--panel:#131e30;--panel2:#1a2940;--text:#f4f7fb;--muted:#9eacc0;--line:#293951;--green:#22c55e;--red:#ef4444;--yellow:#facc15;--gray:#526176;--blue:#60a5fa}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#0b1220,#111c2e);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:900px;margin:auto;padding:20px 14px 40px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.brand h1{font-size:25px;margin:0 0 5px}.brand p{margin:0;color:var(--muted);font-size:13px}.yearbox{background:var(--panel);border:1px solid var(--line);padding:8px 10px;border-radius:13px;display:flex;gap:7px;align-items:center}.yearbox select{background:transparent;color:var(--text);border:0;font-size:16px;outline:none}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px}.stat b{display:block;font-size:21px}.stat span{color:var(--muted);font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:12px;margin:12px 2px 18px}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:5px;vertical-align:middle}
+.habit{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;margin:12px 0;box-shadow:0 8px 25px #0002}.habithead{display:flex;justify-content:space-between;align-items:center;gap:10px}.habitname{font-weight:750;font-size:17px}.sub{color:var(--muted);font-size:12px;margin-top:4px}.donebtn{border:0;border-radius:12px;padding:11px 15px;background:var(--green);color:#05210f;font-weight:800;font-size:14px;min-width:112px}.donebtn.done{background:#14532d;color:#dcfce7;outline:1px solid #22c55e}.edit{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:7px 9px;margin-top:10px;font-size:12px}
+.progressline{height:7px;background:#26364d;border-radius:20px;margin:13px 0 7px;overflow:hidden}.progressline i{display:block;height:100%;background:var(--green);border-radius:20px}.counts{display:flex;gap:13px;flex-wrap:wrap;color:var(--muted);font-size:11px}
+.months{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.month{background:#101a2b;border:1px solid var(--line);border-radius:12px;padding:9px;min-width:0}.month h3{font-size:12px;margin:0 0 8px;color:#dbeafe}.week,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}.week span{font-size:9px;color:var(--muted);padding-bottom:3px}.day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:5px;font-size:9px;color:#dce5f2;background:#344256}.day.done{background:var(--green);color:#05210f;font-weight:800}.day.missed{background:var(--red);color:white;font-weight:800}.day.rest{background:var(--yellow);color:#302600;font-weight:800}.day.today{outline:2px solid white;outline-offset:1px}.day.future{background:#263449;color:#718198}.day.empty{background:transparent}
+.details{margin-top:10px;color:var(--muted);font-size:11px}.settings{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:18px}.settings h2{font-size:16px;margin:0 0 10px}.settingrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}.settingrow input[type=text]{width:45%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:8px;text-align:right}.checks{display:flex;flex-wrap:wrap;gap:9px}.checks label{font-size:12px;color:var(--muted);white-space:nowrap}.checks input{accent-color:var(--yellow)}
+.note{color:var(--muted);font-size:11px;line-height:1.7;margin-top:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.secondary{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px 12px;font-size:12px}
+@media(max-width:600px){.months{grid-template-columns:repeat(2,1fr)}.brand h1{font-size:21px}.donebtn{min-width:100px;padding:10px}.stats{gap:6px}.stat{padding:10px 8px}.stat b{font-size:18px}}
+@media(max-width:360px){.months{grid-template-columns:1fr}.habithead{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top">
+  <div class="brand"><h1>📅 My Habits</h1><p>عاداتي • التزامي طوال السنة</p></div>
+  <div class="yearbox"><span>السنة</span><select id="yearSelect" aria-label="السنة"></select></div>
+ </header>
+ <section class="stats">
+  <div class="stat"><b id="allDone">0</b><span>إنجازات هذا العام</span></div>
+  <div class="stat"><b id="allMissed">0</b><span>أيام لم أنجز فيها</span></div>
+  <div class="stat"><b id="allRate">0%</b><span>نسبة الالتزام</span></div>
+ </section>
+ <div class="legend">
+  <span><i class="dot" style="background:var(--green)"></i>أنجزت</span>
+  <span><i class="dot" style="background:var(--red)"></i>لم أنجز</span>
+  <span><i class="dot" style="background:var(--yellow)"></i>راحة</span>
+  <span><i class="dot" style="background:#344256"></i>لم يأتِ بعد</span>
+ </div>
+ <main id="habits"></main>
+ <section class="settings">
+  <h2>⚙️ إعدادات العادات</h2>
+  <div id="settingsRows"></div>
+  <p class="note">يمكنك تغيير اسم العادة الرابعة وأيام راحة الرياضة. الراحة لا تُحسب نجاحاً أو إخفاقاً. تُسجَّل الأيام الماضية غير المنجزة بالأحمر تلقائياً، أما اليوم الحالي فيبقى مفتوحاً حتى ينتهي اليوم.</p>
+  <div class="actions">
+   <button class="secondary" id="exportBtn">تصدير نسخة احتياطية</button>
+   <button class="secondary" id="importBtn">استيراد نسخة احتياطية</button>
+   <input type="file" id="importFile" accept="application/json" hidden>
+  </div>
+ </section>
+ <p class="note">🔒 بياناتك محفوظة على هذا الجهاز فقط، ولا يحتاج التطبيق إلى الإنترنت. لا تحذف بيانات Safari أو ملفات الموقع حتى لا تفقد سجلك.</p>
+</div>
+<script>
+const KEY='myHabitsOffline_v1';
+const defaultHabits=[
+ {id:'sport',name:'الرياضة',emoji:'🏃',rest:[4,5,6]},
+ {id:'uni',name:'الدراسة الجامعية',emoji:'🎓',rest:[4,6]},
+ {id:'french',name:'تعلم اللغة الفرنسية',emoji:'🇫🇷',rest:[4,6]},
+ {id:'other',name:'عادة أخرى',emoji:'⭐',rest:[]}
+];
+let data={marks:{},names:{},sportRest:[4,5,6]};
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved)data={...data,...saved};}catch(e){}
+const weekdays=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const months=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const $=id=>document.getElementById(id);
+const today=new Date();today.setHours(0,0,0,0);
+let selectedYear=today.getFullYear();
+function save(){localStorage.setItem(KEY,JSON.stringify(data));}
+function dateKey(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+function getHabits(){return defaultHabits.map(h=>({...h,name:data.names[h.id]||h.name,rest:h.id==='sport'?data.sportRest:h.rest}));}
+function status(h,key,dt){
+ if(h.rest.includes(dt.getDay()))return 'rest';
+ const mark=data.marks[h.id]?.[key];
+ if(mark)return mark;
+ if(dt<today)return 'missed';
+ if(dt.getTime()===today.getTime())return 'pending';
+ return 'future';
+}
+function render(){
+ const habits=getHabits();let totalDone=0,totalMissed=0,totalEligible=0;
+ $('habits').innerHTML='';
+ habits.forEach(h=>{
+  let done=0,missed=0,eligible=0;
+  for(let m=0;m<12;m++){let n=new Date(selectedYear,m+1,0).getDate();for(let d=1;d<=n;d++){
+   let dt=new Date(selectedYear,m,d);let s=status(h,dateKey(selectedYear,m,d),dt);
+   if(s==='done'){done++;}else if(s==='missed'){missed++;}
+   if(s==='done'||s==='missed')eligible++;
+  }}
+  totalDone+=done;totalMissed+=missed;totalEligible+=eligible;
+  const todayKey=dateKey(today.getFullYear(),today.getMonth(),today.getDate());
+  const todayStatus=status(h,todayKey,today);
+  const isDone=todayStatus==='done';
+  const card=document.createElement('section');card.className='habit';
+  card.innerHTML=`<div class="habithead"><div><div class="habitname">${h.emoji} ${escapeHtml(h.name)}</div><div class="sub">إنجاز اليوم: ${isDone?'تم التسجيل ✅':todayStatus==='rest'?'يوم راحة 🟡':'لم تسجل بعد'}</div></div><button class="donebtn ${isDone?'done':''}" data-habit="${h.id}">${isDone?'✓ تم اليوم':'سجل إنجاز اليوم'}</button></div>
+   <div class="progressline"><i style="width:${eligible?Math.round(done/eligible*100):0}%"></i></div>
+   <div class="counts"><span>🟢 ${done} إنجاز</span><span>🔴 ${missed} إخفاق</span><span>🟡 ${h.rest.length} أيام راحة أسبوعياً</span><span>📈 ${eligible?Math.round(done/eligible*100):0}%</span></div>
+   <div class="months" id="months-${h.id}"></div>`;
+  $('habits').appendChild(card);
+  card.querySelector('button').addEventListener('click',()=>toggleToday(h.id));
+  const monthsEl=card.querySelector('.months');
+  for(let m=0;m<12;m++){
+   const first=new Date(selectedYear,m,1),count=new Date(selectedYear,m+1,0).getDate();
+   const box=document.createElement('div');box.className='month';
+   let content=`<h3>${months[m]}</h3><div class="week">${['ح','ن','ث','ر','خ','ج','س'].map(x=>`<span>${x}</span>`).join('')}</div><div class="days">`;
+   // JS Sunday-first matches weekday headings
+   for(let i=0;i<first.getDay();i++)content+='<span class="day empty"></span>';
+   for(let d=1;d<=count;d++){
+    const dt=new Date(selectedYear,m,d),key=dateKey(selectedYear,m,d),s=status(h,key,dt);
+    let cls=s==='done'?'done':s==='missed'?'missed':s==='rest'?'rest':s==='future'?'future':'';
+    if(dt.getTime()===today.getTime())cls+=' today';
+    content+=`<span class="day ${cls}" title="${d} ${months[m]}: ${label(s)}">${d}</span>`;
+   }
+   content+='</div>';box.innerHTML=content;monthsEl.appendChild(box);
+  }
+ });
+ $('allDone').textContent=totalDone;$('allMissed').textContent=totalMissed;
+ $('allRate').textContent=(totalDone+totalMissed)?Math.round(totalDone/(totalDone+totalMissed)*100)+'%':'0%';
+}
+function label(s){return ({done:'أنجزت',missed:'لم أنجز',rest:'راحة',future:'لم يأتِ بعد',pending:'اليوم مفتوح'})[s]||s;}
+function toggleToday(id){
+ const h=getHabits().find(x=>x.id===id);const key=dateKey(today.getFullYear(),today.getMonth(),today.getDate());
+ if(h.rest.includes(today.getDay())){alert('هذا يوم راحة لهذه العادة 🟡');return;}
+ data.marks[id]=data.marks[id]||{};
+ if(data.marks[id][key]==='done')delete data.marks[id][key];else data.marks[id][key]='done';
+ save();render();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderSettings(){
+ const rows=$('settingsRows');rows.innerHTML='';
+ const habits=getHabits();
+ const nameRow=document.createElement('div');nameRow.className='settingrow';
+ nameRow.innerHTML=`<span>اسم العادة الرابعة</span><input type="text" id="otherName" maxlength="30" value="${escapeHtml(habits[3].name)}">`;rows.appendChild(nameRow);
+ nameRow.querySelector('input').addEventListener('change',e=>{data.names.other=e.target.value.trim()||'عادة أخرى';save();render();});
+ const sport=document.createElement('div');sport.className='settingrow';sport.style.display='block';
+ sport.innerHTML='<div style="margin-bottom:9px">أيام راحة الرياضة (اختر ثلاثة أيام)</div><div class="checks" id="sportChecks"></div>';rows.appendChild(sport);
+ weekdays.forEach((day,i)=>{
+  const lab=document.createElement('label');lab.innerHTML=`<input type="checkbox" value="${i}" ${data.sportRest.includes(i)?'checked':''}> ${day}`;
+  sport.querySelector('#sportChecks').appendChild(lab);
+  lab.querySelector('input').addEventListener('change',()=>{
+   const vals=[...sport.querySelectorAll('input:checked')].map(x=>Number(x.value));
+   if(vals.length>3){lab.querySelector('input').checked=false;alert('اختر ثلاثة أيام فقط.');return;}
+   data.sportRest=vals;save();render();
+  });
+ });
+}
+function setupYear(){
+ const sel=$('yearSelect');
+ for(let y=today.getFullYear()-2;y<=today.getFullYear()+2;y++){let o=document.createElement('option');o.value=y;o.textContent=y;if(y===selectedYear)o.selected=true;sel.appendChild(o);}
+ sel.addEventListener('change',()=>{selectedYear=Number(sel.value);render();});
+}
+$('exportBtn').addEventListener('click',()=>{
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='my-habits-backup.json';a.click();URL.revokeObjectURL(url);
+});
+$('importBtn').addEventListener('click',()=>$('importFile').click());
+$('importFile').addEventListener('change',async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{const obj=JSON.parse(await f.text());if(!obj||typeof obj!=='object'||!obj.marks)throw Error();data={...data,...obj};save();renderSettings();render();alert('تم استيراد النسخة الاحتياطية.');}
+ catch(err){alert('الملف غير صالح.');}e.target.value='';
+});
+setupYear();renderSettings();render();
+</script>
+<script>if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(console.error)); }</script>
+</body>
+</html>
